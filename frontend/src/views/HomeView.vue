@@ -88,13 +88,13 @@ const chooseFilter = (filter) => {
             <Ingredients v-if="!isCategories" @filterate="chooseFilter"/>
           </nav>
         </div>
+      </div>
         <div class="random-block">
           <button @click="cocktailsStore.randomaize(chosen)" class="btn">
             RANDOM
           </button>
           <span @click="clear" class="clear-random">clear random/filters</span>
         </div>
-      </div>
       <CategorizedCocktailsBlock v-if="!randomized" :chosen="chosen"/>
       <Cocktail v-if="randomized" :cocktail="random"/>
     </div>
