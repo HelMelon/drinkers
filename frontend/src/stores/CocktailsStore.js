@@ -6,7 +6,7 @@ const useCocktailsStore = defineStore("CocktailsStore", {
     isLoading: false,
     randomized: false,
     random: {},
-    apiUrl: 'http://localhost:4000/api/cocktails'
+    apiUrl: `${location.origin}:4000/api/cocktails`
   }),
   getters: {
     gin() {
