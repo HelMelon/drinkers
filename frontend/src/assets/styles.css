@@ -22,9 +22,60 @@ h1 {
     font-family: 'Serenita', serif;
 }
 
+.night hr {
+    border-color: #689d9b;
+}
+
+.night .tooltip .tooltiptext {
+    background-color: #689d9b;
+    color: #0b2625;
+}
+
+.night .tooltip .tooltiptext::after {
+    border-color: #689d9b transparent transparent transparent;
+}
+
+.day .tooltip .tooltiptext {
+    background-color: #0b2625;
+    color: #689d9b;
+}
+
+.day .tooltip .tooltiptext::after {
+    border-color: #0b2625 transparent transparent transparent;
+}
+
+.day hr {
+    border-color: #0b2625;
+}
+
+.day .form_toggle .item-1 input[type=radio]:checked + label {
+    background-color: #0b2625;
+}
+
+.night .form_toggle .item-1 input[type=radio]:checked + label {
+    background-color: #689d9b;
+}
+
+h2 {
+    font-size: 35px;
+    text-align: center;
+    line-height: 60px;
+    font-family: 'Serenita', serif;
+}
+
 .price {
-    color: #e14563;
-    font-weight: 400;
+    font-weight: 600;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+}
+
+.day .price {
+    color: #0b2625;
+}
+
+.night .price {
+    color: #689d9b;
 }
 
 hr {
@@ -59,7 +110,7 @@ h3 {
     margin-block: 30px;
 }
 
-.random-btn {
+.btn {
     margin: 0 auto;
     height: 60px;
     width: 150px;
@@ -115,7 +166,7 @@ a {
 
 
 .day {
-    background-color: #769d9c;
+    background-color: #689d9b;
 }
 
 .day h2, .day h1 {
@@ -137,12 +188,12 @@ a {
 
 
 .day .header svg {
-    fill: #769d9c;
-    stroke: #769d9c;
+    fill: #689d9b;
+    stroke: #689d9b;
 }
 
 
-.day .random-btn {
+.day .btn {
     box-shadow: inset 0px 0px 5px 7px #0b2625;
     color: #0b2625;
 }
@@ -179,7 +230,7 @@ a {
     stroke: #0b2625;
 }
 
-.random-btn {
+.night .btn {
     box-shadow: inset 0 0 5px 7px #689d9b;
     color: #689d9b;
 }
@@ -188,12 +239,7 @@ a {
     color: #689d9b;
 }
 
-
-.night h3 {
-    color: #689d9b;
-}
-
-.night h1 {
+.night h1, .night h2, .night h3 {
     color: #689d9b;
 }
 
@@ -204,4 +250,112 @@ a {
 
 .card {
     border: 1px solid #689d9b;
+}
+
+.night .filter svg {
+    fill: #689d9b;
+    height: 30px;
+}
+
+.day .filter svg {
+    fill: #0b2625;
+    height: 30px;
+}
+
+@media (max-width: 430px) {
+    .desktop {
+        display: none;
+    }
+
+    .mobile .filter {
+        flex-wrap: wrap;
+    }
+
+    .menubox {
+        display: block;
+        padding-inline: 20px;
+    }
+
+    .burger-menu .menubox .categories {
+        gap: 0.5em;
+    }
+
+    .menubox h2 {
+        font-size: 25px;
+    }
+
+}
+
+@media (min-width: 430px) {
+    .mobile {
+        display: none;
+    }
+}
+
+.night .menubox {
+    background-color: #0b2625;
+    box-shadow: 1px 0 6px #689d9b;
+}
+.form_toggle {
+    margin-block: 30px;
+    width: 100%;
+    justify-content: center;
+}
+.day .menubox {
+    background-color: #689d9b;
+    box-shadow: 1px 0 6px #0b2625;
+}
+
+.night .menu-btn > span,
+.night .menu-btn > span::before,
+.night .menu-btn > span::after {
+    background-color: #689d9b;
+
+}
+
+.day .menu-btn > span,
+.day .menu-btn > span::before,
+.day .menu-btn > span::after {
+    background-color: #0b2625;
+}
+
+.night .form_toggle .item-1 input[type=radio]:checked + label {
+    background: #689d9b;
+    color: #0b2625;
+}
+.night .form_toggle .item-2 input[type=radio]:checked + label {
+    background: #689d9b;
+    color: #0b2625;
+}
+
+.day .form_toggle .item-1 input[type=radio]:checked + label {
+    background: #0b2625;
+    color: #689d9b;
+}
+
+.day .form_toggle .item-2 input[type=radio]:checked + label {
+    background: #0b2625;
+    color: #689d9b;
+}
+
+.night .form_toggle label {
+    color: #689d9b;
+}
+
+.day .form_toggle label {
+    color: #0b2625;
+}
+
+.night .form_toggle .item-2 label {
+    border-right: 1px solid #689d9b;
+}
+
+.day .form_toggle .item-2 label {
+    border-right: 1px solid #0b2625;
+}
+.night .form_toggle-item label {
+    border: 1px solid #689d9b;
+}
+.day .form_toggle-item label {
+    border: 1px solid #0b2625;
 }

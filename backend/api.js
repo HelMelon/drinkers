@@ -29,7 +29,7 @@ router.route('/cocktails')
         const {id, name, composition, volume, price, gin, rum, tequila, lime} = req.body;
 
         const queries = data.map((cockt) => {
-            // fille the DB tables
+            // fill the DB tables
             // const priceFormatter = cockt.price.join(', ');
             // return `INSERT INTO cocktails(id, name, composition, volume, price, iba_category, is_fav)
             //         values ('${cockt.id}', '${cockt.name}', '${cockt.composition}', ${cockt.volume}, '{${priceFormatter}
@@ -50,6 +50,9 @@ router.route('/cocktails')
     })
 router.route('/cocktails/:id')
     .patch(async (req, res) => {
+
+
+        
         // const {name, composition, volume, price, category} = req.body;
         // const priceFormatter = `{ ${price.join(', ')} }`;
         // const query = `UPDATE
