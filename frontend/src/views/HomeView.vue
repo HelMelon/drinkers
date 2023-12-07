@@ -1,10 +1,14 @@
 <script setup>
+import {ref} from 'vue';
 import useCocktailsStore from './../stores/CocktailsStore.js';
 import {storeToRefs} from 'pinia';
 import CategorizedCocktailsBlock from "../components/CategorizedCocktailsBlock.vue";
 import Cocktail from "../components/Cocktail.vue";
 import Ingredients from '../components/Filters/Ingredients.vue'
+import Categories from "../components/Filters/Categories.vue";
 
+let isCategories = ref(false);
+let isIngredients = ref(false);
 const cocktailsStore = useCocktailsStore();
 cocktailsStore.getCocktails();
 const {
@@ -12,20 +16,7 @@ const {
   random,
   cocktails, classics, unforgettables, new_era, gin, rum, tequila, big, sour
 } = storeToRefs(cocktailsStore);
-
-const clear = () => {
-  randomized.value = false;
-  chosen.value = cocktails.value;
-  isIngredients.value = false;
-  isCategories.value = false;
-}
-import Categories from "../components/Filters/Categories.vue";
-import {ref} from 'vue';
-
-let chosen = ref(cocktails.value);
-let isIngredients = ref(false);
-let isCategories = ref(false);
-
+let chosen = ref(cocktails);
 const chooseFilter = (filter) => {
   switch (filter) {
     case 'classics':
@@ -66,6 +57,13 @@ const chooseFilter = (filter) => {
   }
   return {isIngredients, isCategories, chosen};
 }
+
+const clear = () => {
+  randomized.value = false;
+  chosen.value = cocktails.value;
+  isIngredients.value = false;
+  isCategories.value = false;
+}
 </script>
 
 <template>
@@ -73,11 +71,11 @@ const chooseFilter = (filter) => {
     <div class="view cocktails">
       <h1>Choose ur death</h1>
       <hr>
-      <div class="desktop">
+      <div class="desktop" v-if="!randomized">
         <Categories v-if="!isIngredients" @filterate="chooseFilter"/>
         <Ingredients v-if="!isCategories" @filterate="chooseFilter"/>
       </div>
-      <div class="mobile">
+      <div class="mobile" v-if="!randomized">
         <div class="burger-menu">
           <input id="menu-toggle" type="checkbox"/>
           <label class="menu-btn" for="menu-toggle">
@@ -89,14 +87,16 @@ const chooseFilter = (filter) => {
           </nav>
         </div>
       </div>
-        <div class="random-block">
-          <button @click="cocktailsStore.randomaize(chosen)" class="btn">
-            RANDOM
-          </button>
-          <span @click="clear" class="clear-random">clear random/filters</span>
-        </div>
+      <div class="random-block">
+        <button @click="cocktailsStore.randomaize(chosen)" class="btn">
+          RANDOM
+        </button>
+        <span @click="clear" class="clear-random">clear random/filters</span>
+      </div>
       <CategorizedCocktailsBlock v-if="!randomized" :chosen="chosen"/>
-      <Cocktail v-if="randomized" :cocktail="random"/>
+      <div class="cards-list">
+        <Cocktail v-if="randomized" :cocktail="random" />
+      </div>
     </div>
   </main>
 </template>
@@ -109,13 +109,13 @@ hr {
   border-width: 2px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 760px) {
   .burger-menu {
     display: none;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 760px) {
   .burger-menu {
     display: block;
   }
