@@ -17,7 +17,7 @@ router.route('/cocktails')
                                             FROM cocktails
                                             LIMIT 50`);
             res.send(rez.rows);
-
+            await client.end()
         } catch (e) {
             res.send({
                 status: '500',
