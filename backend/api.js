@@ -17,16 +17,15 @@ router.route('/cocktails')
                                             FROM cocktails
                                             LIMIT 50`);
             res.send(rez.rows);
-            await client.end()
         } catch (e) {
             res.send({
                 status: '500',
-                statusText: e
+                statusText: `${e.message}`
             })
         }
     })
     .post(async (req, res) => {
-        const {id, name, composition, volume, price, gin, rum, tequila, lime} = req.body;
+        const {id, name, composition, volume, price} = req.body;
 
         const queries = data.map((cockt) => {
             // fill the DB tables
@@ -52,7 +51,6 @@ router.route('/cocktails/:id')
     .patch(async (req, res) => {
 
 
-        
         // const {name, composition, volume, price, category} = req.body;
         // const priceFormatter = `{ ${price.join(', ')} }`;
         // const query = `UPDATE
