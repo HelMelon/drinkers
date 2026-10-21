@@ -5,7 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "prod": "node api.js"
+    "prod": "node --env-file-if-exists=.env server.js",
+    "start": "node --env-file-if-exists=.env server.js",
+    "db:init": "node --env-file-if-exists=.env db-init.js",
+    "test": "node --test tests/unit/*.test.js",
+    "test:db": "node --test --test-concurrency=1 tests/db/*.test.js",
+    "test:all": "npm run test && npm run test:db"
   },
   "author": "",
   "license": "ISC",
