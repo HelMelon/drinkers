@@ -1,68 +1,47 @@
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import useCocktailsStore from './../stores/CocktailsStore.js';
 import {storeToRefs} from 'pinia';
 import CategorizedCocktailsBlock from "../components/CategorizedCocktailsBlock.vue";
 import Cocktail from "../components/Cocktail.vue";
-import Ingredients from '../components/Filters/Ingredients.vue'
-import Categories from "../components/Filters/Categories.vue";
+import FiltersBar from "../components/FiltersBar.vue";
+import {countMatches, matchesFilter} from "../utils/filters.js";
 
-let isCategories = ref(false);
-let isIngredients = ref(false);
 const cocktailsStore = useCocktailsStore();
 cocktailsStore.getCocktails();
-const {
-  randomized,
-  random,
-  cocktails, classics, unforgettables, new_era, gin, rum, tequila, big, sour
-} = storeToRefs(cocktailsStore);
-let chosen = ref(cocktails);
+cocktailsStore.getFilters();
+
+const {randomized, random, cocktails, filters, isLoading, error} = storeToRefs(cocktailsStore);
+
+// Набор фильтров приходит из базы (см. админку) — каталог только рисует его.
+const categories = computed(() => filters.value.filter((filter) => filter.kind === 'category'));
+const ingredients = computed(() => filters.value.filter((filter) => filter.kind !== 'category'));
+
+// Выбранный фильтр — объект из API; null — весь каталог.
+// Список считается ИЗ полного списка, в стор ничего не пишется (иначе фильтры
+// накапливались бы и второй клик давал пустой экран).
+const activeFilter = ref(null);
+
+const chosen = computed(() => (cocktails.value ?? []).filter((cocktail) => matchesFilter(cocktail, activeFilter.value)));
+
+// счётчики для подсказок: сколько коктейлей попадёт под каждый фильтр
+const counts = computed(() => Object.fromEntries(
+  filters.value.map((filter) => [filter.id, countMatches(cocktails.value, filter)])
+));
+
 const chooseFilter = (filter) => {
-  switch (filter) {
-    case 'classics':
-      chosen.value = classics.value;
-      isCategories.value = true;
-      break;
-    case 'unforgettables':
-      chosen.value = unforgettables.value;
-      isCategories.value = true;
-      break;
-    case 'new_era':
-      chosen.value = new_era.value
-      isCategories.value = true;
-      break;
-    case 'gin':
-      chosen.value = gin.value
-      isIngredients.value = true;
-      break;
-    case 'rum':
-      chosen.value = rum.value
-      isIngredients.value = true;
-      break;
-    case 'tequila':
-      chosen.value = tequila.value
-      isIngredients.value = true;
-      break;
-    case 'sour':
-      chosen.value = sour.value
-      isIngredients.value = true;
-      break;
-    case 'big':
-      chosen.value = big.value
-      isIngredients.value = true;
-      break;
-    default:
-      chosen.value = cocktails.value
-      break;
-  }
-  return {isIngredients, isCategories, chosen};
-}
+  activeFilter.value = activeFilter.value?.id === filter.id ? null : filter;
+};
 
 const clear = () => {
   randomized.value = false;
-  chosen.value = cocktails.value;
-  isIngredients.value = false;
-  isCategories.value = false;
+  activeFilter.value = null;
+}
+
+/** Повторная загрузка после ошибки API. */
+const reload = () => {
+  cocktailsStore.getCocktails();
+  cocktailsStore.getFilters();
 }
 </script>
 
@@ -71,31 +50,45 @@ const clear = () => {
     <div class="view cocktails">
       <h1>Choose ur death</h1>
       <hr>
-      <div class="desktop" v-if="!randomized">
-        <Categories v-if="!isIngredients" @filterate="chooseFilter"/>
-        <Ingredients v-if="!isCategories" @filterate="chooseFilter"/>
+      <FiltersBar
+        v-if="!randomized && !error"
+        :categories="categories"
+        :ingredients="ingredients"
+        :active="activeFilter"
+        :counts="counts"
+        @choose="chooseFilter"
+      />
+
+      <p v-if="isLoading" class="state">Загружаю каталог…</p>
+
+      <div v-else-if="error" class="state error">
+        <p>{{ error }}</p>
+        <button class="btn" @click="reload">Повторить</button>
       </div>
-      <div class="mobile" v-if="!randomized">
-        <div class="burger-menu">
-          <input id="menu-toggle" type="checkbox"/>
-          <label class="menu-btn" for="menu-toggle">
-            <span></span>
-          </label>
-          <nav class="nav-mobile menubox">
-            <Categories v-if="!isIngredients" @filterate="chooseFilter"/>
-            <Ingredients v-if="!isCategories" @filterate="chooseFilter"/>
-          </nav>
-        </div>
-      </div>
+
+      <p v-if="activeFilter && !error" class="filter-summary">
+        фильтр «{{ activeFilter.label }}» — {{ chosen.length }} из {{ cocktails.length }}
+        <span class="clear-random" @click="clear">сбросить</span>
+      </p>
+
+      <p v-if="!isLoading && !error && !cocktails.length" class="state empty">
+        Каталог пуст. Залейте данные через админку — вкладка «Импорт».
+      </p>
+
+      <p v-if="!isLoading && !error && cocktails.length && !chosen.length" class="state empty">
+        Под фильтр «{{ activeFilter?.label }}» ничего не нашлось.
+        <span class="clear-random" @click="clear">сбросить фильтр</span>
+      </p>
+
       <div class="random-block">
-        <button @click="cocktailsStore.randomaize(chosen)" class="btn">
+        <button class="btn" :disabled="!chosen.length" @click="cocktailsStore.randomaize(chosen)">
           RANDOM
         </button>
-        <span @click="clear" class="clear-random">clear random/filters</span>
+        <span class="clear-random" @click="clear">clear random/filters</span>
       </div>
-      <CategorizedCocktailsBlock v-if="!randomized" :chosen="chosen"/>
+      <CategorizedCocktailsBlock v-if="!randomized && chosen.length" :chosen="chosen" />
       <div class="cards-list">
-        <Cocktail v-if="randomized" :cocktail="random" />
+        <Cocktail v-if="randomized" :cocktail="random" :alco="'domestic'" />
       </div>
     </div>
   </main>
@@ -109,97 +102,21 @@ hr {
   border-width: 2px;
 }
 
-@media (min-width: 760px) {
-  .burger-menu {
-    display: none;
-  }
+.state {
+  text-align: center;
+  opacity: .8;
+  margin: 18px 0;
 }
 
-@media (max-width: 760px) {
-  .burger-menu {
-    display: block;
-  }
+.state.error {
+  color: #b3423a;
 }
 
-.burger-menu {
-  width: 30px;
-  position: relative;
+.state.error p {
+  margin: 0 0 10px;
 }
 
-.menu-btn {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.menu-btn > span,
-.menu-btn > span::before,
-.menu-btn > span::after {
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  transition-duration: 0.25s;
-}
-
-.menu-btn > span::before {
-  content: '';
-  top: -8px;
-}
-
-.menu-btn > span::after {
-  content: 'filter';
-  top: 8px;
-}
-
-.menubox {
-  z-index: 100;
-  display: block;
-  position: fixed;
-  visibility: hidden;
-  top: 0;
-  right: -100%;
-  width: 300px;
-  height: 100%;
-  margin: 0;
-  padding: 50px 25px;
-  list-style: none;
-  transition-duration: 0.25s;
-}
-
-#menu-toggle {
-  opacity: 0;
-}
-
-#menu-toggle:checked ~ .menu-btn > span {
-  transform: rotate(45deg);
-}
-
-#menu-toggle:checked ~ .menu-btn > span::before {
-  top: 0;
-  transform: rotate(0);
-}
-
-#menu-toggle:checked ~ .menu-btn > span::after {
-  top: 0;
-  transform: rotate(90deg);
-}
-
-#menu-toggle:checked ~ .menubox {
-  visibility: visible;
-  right: 0;
-}
-
-@media (max-width: 320px) {
-  .menubox {
-    width: 100%;
-    text-align: center;
-  }
+.state.empty {
+  opacity: .6;
 }
 </style>

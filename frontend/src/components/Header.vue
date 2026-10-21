@@ -10,7 +10,7 @@
         xml:space="preserve"
       >
         <g transform="translate(-.606 .146)">
-          <g transform="translate(.24 -.058)" id="tight-bounds">
+          <g id="tight-bounds" transform="translate(.24 -.058)">
             <g id="icon-0">
               <path
                 class="st3"
@@ -38,11 +38,12 @@
       </svg>
       <p>helicoder project</p>
     </RouterLink>
+    <RouterLink to="/admin" class="admin-link">admin</RouterLink>
 
-<!--    TODO Add info to abt page-->
+    <!--    TODO Add info to abt page-->
     <!--    <nav>-->
-<!--      <RouterLink to="/about">About author</RouterLink>-->
-<!--    </nav>-->
+    <!--      <RouterLink to="/about">About author</RouterLink>-->
+    <!--    </nav>-->
   </div>
 </template>
 
@@ -57,6 +58,8 @@ export default {
 <style scoped>
 .header {
   display: flex;
+  align-items: center;
+  gap: 12px;
   padding-inline: 20px;
   justify-content: center;
   align-items: center;
@@ -87,5 +90,15 @@ nav a {
   padding-inline: 5px;
   font-size: 20px;
   cursor: pointer;
+}
+.admin-link {
+  margin-left: auto;
+  font-size: 13px;
+  opacity: .45;
+  text-decoration: none;
+}
+
+.admin-link:hover {
+  opacity: 1;
 }
 </style>
