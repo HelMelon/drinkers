@@ -1,0 +1,575 @@
+{
+  "cocktails": [
+    {
+      "id": "yso20ifjw8",
+      "name": "Cosmopolitan",
+      "composition": "vodka, orange liqueur, cranberry&lime juice",
+      "volume": 105,
+      "price": [
+        14
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "64fd4wf3fgg",
+      "name": "French 75",
+      "composition": "gin, champagne, lemon juice, syrup",
+      "volume": 200,
+      "price": [
+        14,
+        23
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "3khogubn2k8",
+      "name": "Irish coffee",
+      "composition": "whiskey, coffee, whipped cream",
+      "volume": 200,
+      "price": [
+        14,
+        16
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "jsf8553487c",
+      "name": "Long island iced tea",
+      "composition": "gin, rum, tequila, vodka, lemon&lime juice, orange liqueur, coke",
+      "volume": 220,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "a9uy9fdyku7",
+      "name": "Mai Tai",
+      "composition": "white&dark rum, orange liqueur, syrups, lime juice",
+      "volume": 195,
+      "price": [
+        14,
+        22
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "ri5p1v3tx1",
+      "name": "Margarita",
+      "composition": "tequila, syrup, orange liqueur, lime juice",
+      "volume": 110,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "nzip5geiae",
+      "name": "Mojito",
+      "composition": "white rum, lime juice, mint, syrup, sparkling water",
+      "volume": 205,
+      "price": [
+        12,
+        18
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "r4hjv432hrmujk",
+      "name": "Moscow mule",
+      "composition": "vodka, fresh ginger, syrup, lime juice, carbonated water",
+      "volume": 250,
+      "price": [
+        14
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "8zzrvs7jpz3",
+      "name": "Peach Bellini",
+      "composition": "peach puree, sparkling wine/prosecco, syrup",
+      "volume": 125,
+      "price": [
+        10,
+        16
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "k83cokknmw",
+      "name": "Pina Colada",
+      "composition": "white rum, coconut cream, lime juice, pineapple juice, syrup",
+      "volume": 225,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "v7d0qczdr98",
+      "name": "Zombie",
+      "composition": "white rum, golden bourbon, black bourbon, sambuca, liqueur, orange juice, lemon juice, pineapple juice, bitter, syrup",
+      "volume": 305,
+      "price": [
+        19,
+        44
+      ],
+      "iba_category": "Classics"
+    },
+    {
+      "id": "ey58jt047v",
+      "name": "Espresso Martini",
+      "composition": "vodka, coffee liqueur, syrup, espresso",
+      "volume": 100,
+      "price": [
+        14
+      ],
+      "iba_category": "New Era"
+    },
+    {
+      "id": "ckaju6mhyx8",
+      "name": "Not a Paloma",
+      "composition": "gin, grapefruit juice, syrup, sparkling water",
+      "volume": 180,
+      "price": [
+        14,
+        18
+      ],
+      "iba_category": "New Era"
+    },
+    {
+      "id": "4fdg5d7g87gdfg",
+      "name": "Old Cuban",
+      "composition": "rum, lime juice, syrup, mint, bitters, champagne",
+      "volume": 90,
+      "price": [
+        32,
+        18
+      ],
+      "iba_category": "New Era"
+    },
+    {
+      "id": "5hq48dknva8",
+      "name": "Penicillin",
+      "composition": "whisky, ginger, honey, lemon juice, island whisky",
+      "volume": 125,
+      "price": [
+        26
+      ],
+      "iba_category": "New Era"
+    },
+    {
+      "id": "hyg0ozd0zbc",
+      "name": "Tequila Paloma",
+      "composition": "tequila, lime/grapefruit juice, syrup, sparkling water",
+      "volume": 180,
+      "price": [
+        20
+      ],
+      "iba_category": "New Era"
+    },
+    {
+      "id": "4a572t7v6q5",
+      "name": "Aperol spritz-F",
+      "composition": "sparkling wine/prosecco, fiero vermouth, soda",
+      "volume": 230,
+      "price": [
+        15,
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "ipy9htmbge",
+      "name": "Bounty",
+      "composition": "fresh strawberry, rum, orange liqueur, syrups, cream",
+      "volume": 105,
+      "price": [
+        12,
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "h14km881s6b",
+      "name": "Brandy Alexander",
+      "composition": "brandy, coffee liqueur, cream",
+      "volume": 90,
+      "price": [
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "4ymj9v30zyu",
+      "name": "Brooklyn",
+      "composition": "bourbon, vermouth, liqueur, bitter",
+      "volume": 90,
+      "price": [
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "y3wkinlu7vr",
+      "name": "Campari and Tonic",
+      "composition": "campari, sparkling wine/prosecco, schweppes tonic",
+      "volume": 190,
+      "price": [
+        15,
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "z9x2xv68bh",
+      "name": "Cantarito tequila",
+      "composition": "tequila, orange juice, grapefruit juice, lime juice, lemonade",
+      "volume": 250,
+      "price": [
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "54fg4d5g45fdf",
+      "name": "Dirty tequila martini",
+      "composition": "white tequila, martini, olive juice, olives",
+      "volume": 100,
+      "price": [
+        17
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "54fg4d45fdf",
+      "name": "Gin Fizz",
+      "composition": "gin, lemon juice, syrup, soda",
+      "volume": 180,
+      "price": [
+        20,
+        16
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "a5quu3f91md",
+      "name": "Gin gimlet",
+      "composition": "gin, lime juice, syrup",
+      "volume": 80,
+      "price": [
+        14,
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "2q6vrqr8dvh",
+      "name": "Green",
+      "composition": "tequila, melon liqueur, Becherovka, syrup",
+      "volume": 100,
+      "price": [
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "sqxur8zib3q",
+      "name": "Lemon drop",
+      "composition": "vodka, orange liqueur, lemon juice, syrup",
+      "volume": 150,
+      "price": [
+        14
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "d390xrgl6ec",
+      "name": "Lemonade royal",
+      "composition": "raspberry, rum, gin, vodka, tequila, liqueur, becherovka, syrup, sprite",
+      "volume": 250,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "rumx1amus8",
+      "name": "Martini royale",
+      "composition": "vermouth, champagne, lime juice",
+      "volume": 300,
+      "price": [
+        24
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "44fs5f45dsfs5",
+      "name": "Nectar of the Goodness",
+      "composition": "tequila reposado, lime juice, syrup, quail protein, red wine",
+      "volume": 125,
+      "price": [
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "df65g4d654gd3f",
+      "name": "Paper plane",
+      "composition": "bourbon, Amaro Nonino liqueur, lemon juice, Italian bitter",
+      "volume": 120,
+      "price": [
+        23
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "j55wsghkjh52454k",
+      "name": "Pom Thumb",
+      "composition": "gin, syrup, lime juice, pomegranate juice",
+      "volume": 125,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "0ecv0kse61ge",
+      "name": "Red snapper",
+      "composition": "gin, tomato juice, spices",
+      "volume": 230,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "hydsf4zd024zbc",
+      "name": "Sazerac",
+      "composition": "cognac, whiskey, bourbon, absinthe, sugar, soda, bitter",
+      "volume": 135,
+      "price": [
+        12,
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "02kmem0roidf",
+      "name": "Scarface",
+      "composition": "vodka, coffee liqueur, irish cream, milk, cream",
+      "volume": 125,
+      "price": [
+        18
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "12unvcepncy",
+      "name": "White Russian",
+      "composition": "vodka, coffee liqueur, cream",
+      "volume": 170,
+      "price": [
+        14
+      ],
+      "iba_category": "Not categorized"
+    },
+    {
+      "id": "94id0tzwy8r",
+      "name": "Bees Knees",
+      "composition": "gin, honey, lemon juice",
+      "volume": 90,
+      "price": [
+        14,
+        18
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "ggwhgygboal",
+      "name": "Between the sheets",
+      "composition": "brandy, white rum, liqueur, lemon juice",
+      "volume": 90,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "zwv8roxkny",
+      "name": "Boulevardier",
+      "composition": "bourbon, sweet vermouth, bitter",
+      "volume": 150,
+      "price": [
+        20
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "of392ozml6h",
+      "name": "Brandy Crusta",
+      "composition": "brandy, orange liqueur, lemon juice, syrup, bitter",
+      "volume": 90,
+      "price": [
+        14
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "r4hjvhrmujk",
+      "name": "Daiquiri",
+      "composition": "white rum, lime juice, syrup",
+      "volume": 105,
+      "price": [
+        12,
+        18
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "o6ss95ohyoc",
+      "name": "Manhattan",
+      "composition": "bourbon, vermouth, bitter",
+      "volume": 120,
+      "price": [
+        16,
+        29
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "x501uj80ce",
+      "name": "Negroni",
+      "composition": "gin, sweet vermouth, bitter",
+      "volume": 140,
+      "price": [
+        22
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "n3c9jx0mpse",
+      "name": "Old fashioned",
+      "composition": "bourbon, bitter, syrup",
+      "volume": 130,
+      "price": [
+        18,
+        32
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "54fg4d45f21sdf",
+      "name": "Ramos Fizz",
+      "composition": "gin, lime and lemon juice, syrup, cream, quail egg white, soda",
+      "volume": 230,
+      "price": [
+        25,
+        21
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "iop7dqqxm3b",
+      "name": "Whiskey sour",
+      "composition": "bourbon, lemon&orange juice, syrup, quail protein",
+      "volume": 200,
+      "price": [
+        20
+      ],
+      "iba_category": "Unforgettables"
+    },
+    {
+      "id": "tbcuewmn9md",
+      "name": "White lady",
+      "composition": "gin, liqueur, syrup, lemon juice, quail protein",
+      "volume": 130,
+      "price": [
+        14,
+        20
+      ],
+      "iba_category": "Unforgettables"
+    }
+  ],
+  "filters": [
+    {
+      "id": "cat-classics",
+      "kind": "category",
+      "label": "Classics",
+      "matchValue": "Classics",
+      "threshold": null,
+      "sortOrder": 1
+    },
+    {
+      "id": "cat-unforgettables",
+      "kind": "category",
+      "label": "Unforgettables",
+      "matchValue": "Unforgettables",
+      "threshold": null,
+      "sortOrder": 2
+    },
+    {
+      "id": "cat-new-era",
+      "kind": "category",
+      "label": "New Era",
+      "matchValue": "New Era",
+      "threshold": null,
+      "sortOrder": 3
+    },
+    {
+      "id": "cat-not-categorized",
+      "kind": "category",
+      "label": "Not categorized",
+      "matchValue": "Not categorized",
+      "threshold": null,
+      "sortOrder": 4
+    },
+    {
+      "id": "ing-gin",
+      "kind": "ingredient",
+      "label": "gin",
+      "matchValue": "gin",
+      "threshold": null,
+      "sortOrder": 1
+    },
+    {
+      "id": "ing-tequila",
+      "kind": "ingredient",
+      "label": "tequila",
+      "matchValue": "tequila",
+      "threshold": null,
+      "sortOrder": 2
+    },
+    {
+      "id": "ing-rum",
+      "kind": "ingredient",
+      "label": "rum",
+      "matchValue": "rum",
+      "threshold": null,
+      "sortOrder": 3
+    },
+    {
+      "id": "ing-sour",
+      "kind": "ingredient",
+      "label": "sour",
+      "matchValue": "lime",
+      "threshold": null,
+      "sortOrder": 4
+    },
+    {
+      "id": "vol-big",
+      "kind": "volume",
+      "label": "big volume",
+      "matchValue": null,
+      "threshold": 150,
+      "sortOrder": 5
+    }
+  ]
+}
