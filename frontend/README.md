@@ -1,29 +1,28 @@
 # frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 SPA каталога коктейлей: страницы каталога и админки, Pinia-сторы, компоненты
+фильтров и импорта.
 
-## Recommended IDE Setup
+Полное описание проекта — в [корневом README](../README.md) и в [`docs/`](../docs/):
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [возможности](../docs/FEATURES.md) — что умеют каталог и админка;
+- [архитектура](../docs/ARCHITECTURE.md) — слои, контракт API, решения;
+- [план развития](../docs/ROADMAP.md) и [аудит](../docs/AUDIT.md).
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
+npm run dev     # http://localhost:5173, API ожидается на :4000
+npm run lint
+npm test        # vitest + jsdom, фикстуры — без живого API
 npm run build
+```
+
+Структура:
+
+```
+src/views/        HomeView (каталог), AdminView (админка), AboutView (заглушка)
+src/components/   Cocktail, FiltersBar, admin/{CocktailsEditor,FiltersEditor,ImportPanel}
+src/stores/       CocktailsStore: страницы, фильтры, ошибки, random
+src/api/admin.js  авторизация админки, запросы, скачивание экспорта
+tests/            fixtures.json (снимок каталога) и fakeApi.js (эмулятор /search)
 ```
