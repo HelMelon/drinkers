@@ -5,7 +5,7 @@ import cors from 'cors';
 const { Pool } = pg;
 const router = new express.Router();
 const pool = new Pool({
-    connectionString: 'postgres://qpigkfaq:V8lmFoRfvK9qe_fJwawdgSyEBOEpCW5A@ella.db.elephantsql.com/qpigkfaq'
+    connectionString: process.env.DATABASE_URL
 });
 const app = express();
 
