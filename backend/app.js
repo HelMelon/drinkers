@@ -6,6 +6,7 @@ import { parseImportContent, planImport } from './import-plan.js';
 import { toClientError } from './http-error.js';
 import { createRateLimiter } from './rate-limit.js';
 import { exportFilename, toCsv, toJson } from './export.js';
+import { buildSearchQuery, parsePaging } from './search.js';
 import { normalizeCocktail } from './normalize.js';
 
 assertAuthConfig();
@@ -50,6 +51,75 @@ app.get('/api/cocktails', async (req, res) => {
     res.json(rows);
   } catch (error) {
     fail(res, error);
+  }
+});
+
+// Серверный поиск по каталогу: /api/cocktails/search?filter=&q=&page=&per_page=&sort=
+app.get('/api/cocktails/search', async (req, res) => {
+  const paging = parsePaging({ page: req.query.page, perPage: req.query.per_page });
+  let filter = null;
+  const filterId = String(req.query.filter ?? '').trim();
+  try {
+    if (filterId) {
+      const { rows } = await query('SELECT * FROM filters WHERE id = $1', [filterId]);
+      if (!rows.length) return res.status(400).json({ status: '400', statusText: 'Фильтр не найден' });
+      filter = {
+        kind: rows[0].kind,
+        matchValue: rows[0].match_value,
+        threshold: rows[0].threshold,
+      };
+    }
+
+    const built = buildSearchQuery({
+      filter,
+      q: req.query.q,
+      sort: req.query.sort,
+      page: paging.page,
+      perPage: paging.perPage,
+    });
+
+    const limitIndex = built.params.length + 1;
+    const offsetIndex = built.params.length + 2;
+    const [data, totals] = await Promise.all([
+      query(
+        `SELECT * FROM cocktails ${built.where} ORDER BY ${built.order} LIMIT $${limitIndex} OFFSET $${offsetIndex}`,
+        [...built.params, built.perPage, built.offset],
+      ),
+      query(`SELECT count(*)::int AS total FROM cocktails ${built.where}`, built.params),
+    ]);
+
+    const total = totals.rows[0].total;
+    return res.json({
+      items: data.rows,
+      total,
+      page: built.page,
+      per_page: built.perPage,
+      pages: Math.max(1, Math.ceil(total / built.perPage)),
+      filter: filterId || null,
+      q: String(req.query.q ?? '').trim() || null,
+      sort: String(req.query.sort ?? 'name'),
+    });
+  } catch (error) {
+    return fail(res, error);
+  }
+});
+
+// Случайный коктейль в рамках фильтра — каталог не тянет всю выборку в браузер.
+app.get('/api/cocktails/random', async (req, res) => {
+  const filterId = String(req.query.filter ?? '').trim();
+  try {
+    let filter = null;
+    if (filterId) {
+      const { rows } = await query('SELECT * FROM filters WHERE id = $1', [filterId]);
+      if (!rows.length) return res.status(400).json({ status: '400', statusText: 'Фильтр не найден' });
+      filter = { kind: rows[0].kind, matchValue: rows[0].match_value, threshold: rows[0].threshold };
+    }
+    const built = buildSearchQuery({ filter });
+    const { rows } = await query(`SELECT * FROM cocktails ${built.where} ORDER BY random() LIMIT 1`, built.params);
+    if (!rows.length) return res.status(404).json({ status: '404', statusText: 'Под фильтр ничего не подходит' });
+    return res.json(rows[0]);
+  } catch (error) {
+    return fail(res, error);
   }
 });
 
@@ -115,7 +185,16 @@ const FILTER_COLUMNS = 'id, kind, label, match_value AS "matchValue", threshold,
 
 app.get('/api/filters', async (req, res) => {
   try {
-    const { rows } = await query(`SELECT ${FILTER_COLUMNS} FROM filters ORDER BY kind, sort_order, label`);
+    // count считается на сервере: каталог листает страницами и не видит всю выборку
+    const { rows } = await query(
+      `SELECT ${FILTER_COLUMNS},
+         (SELECT count(*) FROM cocktails c WHERE
+            (f.kind = 'category' AND c.iba_category = f.match_value)
+            OR (f.kind = 'ingredient' AND c.composition ILIKE '%' || f.match_value || '%')
+            OR (f.kind = 'volume' AND c.volume > f.threshold)
+         )::int AS count
+       FROM filters f ORDER BY f.kind, f.sort_order, f.label`,
+    );
     res.json(rows);
   } catch (error) {
     fail(res, error);

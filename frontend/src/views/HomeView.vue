@@ -1,48 +1,53 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import useCocktailsStore from './../stores/CocktailsStore.js';
 import {storeToRefs} from 'pinia';
 import CategorizedCocktailsBlock from "../components/CategorizedCocktailsBlock.vue";
 import Cocktail from "../components/Cocktail.vue";
 import FiltersBar from "../components/FiltersBar.vue";
-import {countMatches, matchesFilter} from "../utils/filters.js";
 
 const cocktailsStore = useCocktailsStore();
-cocktailsStore.getCocktails();
-cocktailsStore.getFilters();
+const {randomized, random, cocktails, filters, isLoading, error, total, page, pages, hasMore} =
+  storeToRefs(cocktailsStore);
 
-const {randomized, random, cocktails, filters, isLoading, error} = storeToRefs(cocktailsStore);
+// Фильтрация, поиск и пагинация — на сервере (SQL). Каталог только просит страницу.
+onMounted(() => {
+  cocktailsStore.getFilters();
+  cocktailsStore.search();
+});
 
-// Набор фильтров приходит из базы (см. админку) — каталог только рисует его.
+// Набор фильтров приходит из базы (см. админку), count для подсказок уже посчитан.
 const categories = computed(() => filters.value.filter((filter) => filter.kind === 'category'));
 const ingredients = computed(() => filters.value.filter((filter) => filter.kind !== 'category'));
+const counts = computed(() => Object.fromEntries(filters.value.map((filter) => [filter.id, filter.count ?? 0])));
 
-// Выбранный фильтр — объект из API; null — весь каталог.
-// Список считается ИЗ полного списка, в стор ничего не пишется (иначе фильтры
-// накапливались бы и второй клик давал пустой экран).
 const activeFilter = ref(null);
 
-const chosen = computed(() => (cocktails.value ?? []).filter((cocktail) => matchesFilter(cocktail, activeFilter.value)));
-
-// счётчики для подсказок: сколько коктейлей попадёт под каждый фильтр
-const counts = computed(() => Object.fromEntries(
-  filters.value.map((filter) => [filter.id, countMatches(cocktails.value, filter)])
-));
+/** Сколько уже показано из найденного. */
+const shown = computed(() => cocktails.value.length);
 
 const chooseFilter = (filter) => {
   activeFilter.value = activeFilter.value?.id === filter.id ? null : filter;
+  cocktailsStore.search({filterId: activeFilter.value?.id ?? null});
+};
+
+/** Догрузить следующую страницу к текущей выборке. */
+const loadMore = () => {
+  cocktailsStore.search({filterId: activeFilter.value?.id ?? null, page: page.value + 1, append: true});
 };
 
 const clear = () => {
   randomized.value = false;
   activeFilter.value = null;
-}
+  cocktailsStore.search();
+};
 
-/** Повторная загрузка после ошибки API. */
 const reload = () => {
-  cocktailsStore.getCocktails();
   cocktailsStore.getFilters();
-}
+  cocktailsStore.search({filterId: activeFilter.value?.id ?? null});
+};
+
+const pickRandom = () => cocktailsStore.randomize(activeFilter.value?.id ?? null);
 </script>
 
 <template>
@@ -59,37 +64,39 @@ const reload = () => {
         @choose="chooseFilter"
       />
 
-      <p v-if="isLoading" class="state">Загружаю каталог…</p>
+      <p v-if="isLoading && !cocktails.length" class="state">Загружаю каталог…</p>
 
       <div v-else-if="error" class="state error">
         <p>{{ error }}</p>
         <button class="btn" @click="reload">Повторить</button>
       </div>
 
-      <p v-if="activeFilter && !error" class="filter-summary">
-        фильтр «{{ activeFilter.label }}» — {{ chosen.length }} из {{ cocktails.length }}
-        <span class="clear-random" @click="clear">сбросить</span>
+      <p v-if="!error && total" class="filter-summary">
+        <template v-if="activeFilter">фильтр «{{ activeFilter.label }}» — </template>
+        показано {{ shown }} из {{ total }}
+        <span v-if="activeFilter" class="clear-random" @click="clear">сбросить</span>
       </p>
 
-      <p v-if="!isLoading && !error && !cocktails.length" class="state empty">
-        Каталог пуст. Залейте данные через админку — вкладка «Импорт».
-      </p>
-
-      <p v-if="!isLoading && !error && cocktails.length && !chosen.length" class="state empty">
-        Под фильтр «{{ activeFilter?.label }}» ничего не нашлось.
-        <span class="clear-random" @click="clear">сбросить фильтр</span>
+      <p v-if="!isLoading && !error && !total" class="state empty">
+        {{ activeFilter ? `Под фильтр «${activeFilter.label}» ничего не нашлось.` : 'Каталог пуст. Залейте данные через админку — вкладка «Импорт».' }}
+        <span v-if="activeFilter" class="clear-random" @click="clear">сбросить фильтр</span>
       </p>
 
       <div class="random-block">
-        <button class="btn" :disabled="!chosen.length" @click="cocktailsStore.randomaize(chosen)">
-          RANDOM
-        </button>
+        <button class="btn" :disabled="!total" @click="pickRandom">RANDOM</button>
         <span class="clear-random" @click="clear">clear random/filters</span>
       </div>
-      <CategorizedCocktailsBlock v-if="!randomized && chosen.length" :chosen="chosen" />
+      <CategorizedCocktailsBlock v-if="!randomized && cocktails.length" :chosen="cocktails" />
       <div class="cards-list">
         <Cocktail v-if="randomized" :cocktail="random" :alco="'domestic'" />
       </div>
+
+      <p v-if="!randomized && hasMore" class="state more">
+        <button class="btn" :disabled="isLoading" @click="loadMore">
+          {{ isLoading ? 'Загружаю…' : `Показать ещё (${total - shown})` }}
+        </button>
+        <span class="pages">страница {{ page }} из {{ pages }}</span>
+      </p>
     </div>
   </main>
 </template>
@@ -117,6 +124,19 @@ hr {
 }
 
 .state.empty {
+  opacity: .6;
+}
+
+.state.more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.state.more .pages {
+  font-size: 13px;
   opacity: .6;
 }
 </style>

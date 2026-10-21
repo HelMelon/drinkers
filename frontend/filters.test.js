@@ -1,20 +1,13 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { createPinia } from 'pinia';
 import HomeView from './src/views/HomeView.vue';
 import fixtures from './tests/fixtures.json';
+import { installFetchStub } from './tests/fakeApi.js';
 
-// Данные — снимок реального каталога (tests/fixtures.json), без живого API:
-// тесты работают и локально, и в CI.
-const real = fixtures.cocktails;
-const filters = fixtures.filters;
-
-beforeAll(() => {
-  globalThis.fetch = async (url) => {
-    const body = String(url).includes('/filters') ? filters : real;
-    return {ok: true, status: 200, json: async () => body};
-  };
-});
+// Каталог работает через серверный поиск: страница по 25, фильтр и пагинация в SQL.
+// Фикстуры повторяют контракт API, поэтому тесты не зависят от живого бэкенда.
+const PER_PAGE = 25;
 
 const mountView = async () => {
   const w = mount(HomeView, { global: { plugins: [createPinia()] } });
@@ -25,58 +18,72 @@ const mountView = async () => {
 
 const cards = (w) => w.findAll('.card').length;
 const buttonByText = (w, text) => w.findAll('button').find((b) => b.text().trim() === text);
-// кнопки-иконки содержат ещё и подсказку с числом («big volume · 12»)
-const buttonContains = (w, text) => w.findAll('button').find((b) => b.text().includes(text));
 
-describe('каталог: фильтры из базы', () => {
-  it('после загрузки показывает все коктейли', async () => {
+beforeEach(() => {
+  installFetchStub(fixtures);
+});
+
+describe('каталог: серверный поиск по страницам', () => {
+  it('первая страница — не больше 25 карточек и счётчик «из 47»', async () => {
     const w = await mountView();
-    expect(real.length).toBeGreaterThan(40);
-    expect(cards(w)).toBe(real.length);
+    expect(fixtures.cocktails.length).toBe(47);
+    expect(cards(w)).toBe(PER_PAGE);
+    expect(w.text()).toContain(`показано ${PER_PAGE} из 47`);
   });
 
-  it('кнопки фильтров нарисованы из /api/filters', async () => {
+  it('«Показать ещё» догружает остаток', async () => {
     const w = await mountView();
-    const categoryFilters = filters.filter((f) => f.kind === 'category');
-    expect(categoryFilters.length).toBeGreaterThan(0);
-    for (const filter of categoryFilters) {
-      expect(buttonByText(w, filter.label)).toBeTruthy();
-    }
+    const more = w.findAll('button').find((b) => b.text().includes('Показать ещё'));
+    expect(more).toBeTruthy();
+    await more.trigger('click');
+    await flushPromises();
+    expect(cards(w)).toBe(47);
+    expect(w.findAll('button').some((b) => b.text().includes('Показать ещё'))).toBe(false);
   });
 
-  it('Classics фильтрует по категории', async () => {
+  it('фильтр по категории перезапрашивает страницу', async () => {
     const w = await mountView();
     await buttonByText(w, 'Classics').trigger('click');
     await flushPromises();
-    const expected = real.filter((c) => c.iba_category === 'Classics').length;
+    const expected = fixtures.cocktails.filter((c) => c.iba_category === 'Classics').length;
     expect(cards(w)).toBe(expected);
+    expect(w.text()).toContain(`из ${expected}`);
   });
 
-  it('второй фильтр не обнуляет список (нет накопления)', async () => {
+  it('второй фильтр не накапливается на первый', async () => {
     const w = await mountView();
     await buttonByText(w, 'Classics').trigger('click');
     await flushPromises();
     await buttonByText(w, 'Unforgettables').trigger('click');
     await flushPromises();
-    const expected = real.filter((c) => c.iba_category === 'Unforgettables').length;
+    const expected = fixtures.cocktails.filter((c) => c.iba_category === 'Unforgettables').length;
     expect(cards(w)).toBe(expected);
   });
 
-  it('повторный клик снимает фильтр', async () => {
+  it('повторный клик по активному фильтру возвращает весь каталог', async () => {
     const w = await mountView();
     await buttonByText(w, 'Classics').trigger('click');
     await flushPromises();
     await buttonByText(w, 'Classics').trigger('click');
     await flushPromises();
-    expect(cards(w)).toBe(real.length);
+    expect(w.text()).toContain('показано 25 из 47');
   });
 
-  it('volume-фильтр считает по порогу из базы', async () => {
+  it('фильтр по объёму считает по порогу из базы', async () => {
     const w = await mountView();
-    const volumeFilter = filters.find((f) => f.kind === 'volume');
-    await buttonContains(w, volumeFilter.label).trigger('click');
+    const volumeFilter = fixtures.filters.find((f) => f.kind === 'volume');
+    await w.findAll('button').find((b) => b.text().includes(volumeFilter.label)).trigger('click');
     await flushPromises();
-    const expected = real.filter((c) => c.volume > volumeFilter.threshold).length;
-    expect(cards(w)).toBe(expected);
+    const expected = fixtures.cocktails.filter((c) => c.volume > volumeFilter.threshold).length;
+    expect(cards(w)).toBe(Math.min(expected, PER_PAGE));
+  });
+
+  it('кнопки фильтров рисуются из /api/filters и несут aria-pressed', async () => {
+    const w = await mountView();
+    const chip = buttonByText(w, 'Classics');
+    expect(chip.attributes('aria-pressed')).toBe('false');
+    await chip.trigger('click');
+    await flushPromises();
+    expect(buttonByText(w, 'Classics').attributes('aria-pressed')).toBe('true');
   });
 });

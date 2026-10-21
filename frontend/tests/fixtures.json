@@ -505,7 +505,8 @@
       "label": "Classics",
       "matchValue": "Classics",
       "threshold": null,
-      "sortOrder": 1
+      "sortOrder": 1,
+      "count": 11
     },
     {
       "id": "cat-unforgettables",
@@ -513,7 +514,8 @@
       "label": "Unforgettables",
       "matchValue": "Unforgettables",
       "threshold": null,
-      "sortOrder": 2
+      "sortOrder": 2,
+      "count": 11
     },
     {
       "id": "cat-new-era",
@@ -521,7 +523,8 @@
       "label": "New Era",
       "matchValue": "New Era",
       "threshold": null,
-      "sortOrder": 3
+      "sortOrder": 3,
+      "count": 5
     },
     {
       "id": "cat-not-categorized",
@@ -529,7 +532,8 @@
       "label": "Not categorized",
       "matchValue": "Not categorized",
       "threshold": null,
-      "sortOrder": 4
+      "sortOrder": 4,
+      "count": 20
     },
     {
       "id": "ing-gin",
@@ -537,7 +541,8 @@
       "label": "gin",
       "matchValue": "gin",
       "threshold": null,
-      "sortOrder": 1
+      "sortOrder": 1,
+      "count": 14
     },
     {
       "id": "ing-tequila",
@@ -545,7 +550,8 @@
       "label": "tequila",
       "matchValue": "tequila",
       "threshold": null,
-      "sortOrder": 2
+      "sortOrder": 2,
+      "count": 8
     },
     {
       "id": "ing-rum",
@@ -553,7 +559,8 @@
       "label": "rum",
       "matchValue": "rum",
       "threshold": null,
-      "sortOrder": 3
+      "sortOrder": 3,
+      "count": 10
     },
     {
       "id": "ing-sour",
@@ -561,7 +568,8 @@
       "label": "sour",
       "matchValue": "lime",
       "threshold": null,
-      "sortOrder": 4
+      "sortOrder": 4,
+      "count": 16
     },
     {
       "id": "vol-big",
@@ -569,7 +577,8 @@
       "label": "big volume",
       "matchValue": null,
       "threshold": 150,
-      "sortOrder": 5
+      "sortOrder": 5,
+      "count": 20
     }
   ]
 }
