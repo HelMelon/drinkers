@@ -18,12 +18,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^6.0.10",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^9.39.5",
     "eslint-plugin-vue": "^9.33.0",
     "jsdom": "^25.0.1",
-    "vite": "^4.4.11",
-    "vitest": "^1.6.1"
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }
