@@ -260,3 +260,34 @@ RewriteRule . /index.html [L]
 **Что осталось вручную:** закоммитить и запушить — только после этого GitHub
 реально прогонит workflow. В настройках репозитория включить required check `CI`
 и запрет прямого пуша в `main`.
+
+---
+
+## Статус: шаг 3 закрыт (21.10.2026)
+
+**Исходно:** 44 открытых алерта Dependabot (14 high) — все в трёх местах:
+vite × 22, транзитивные nanoid/postcss/rollup/esbuild, express-стек
+(qs, body-parser, express, path-to-regexp, cookie, send, serve-static).
+
+**Три коммита, по одной группе:**
+
+| Коммит | Что | Итог |
+|---|---|---|
+| `f683dbc` | express 4.18 → **4.22.3**, pg 8.11 → 8.23, cors 2.8.6, `audit fix` | без мажоров; закрыты qs / body-parser / path-to-regexp / cookie / send / serve-static / proxy-addr |
+| `3e0e546` | vue 3.3 → **3.5.44**, pinia 2.1 → **2.3.1**, vue-router 4.2 → **4.6.4**, `audit fix` | без мажоров; nanoid / postcss / rollup закрыты |
+| `27506b0` | vite 4.5 → **8.3**, plugin-vue 4 → **6**, vitest 1.6 → **5.0**, eslint-plugin-vue 9 → **10** (+ vue-eslint-parser 10, `globals`) | dev-инструменты, связаны через vite — только вместе |
+
+**Проверено после каждого коммита:** 19 юнит + 14 интеграционных (Postgres),
+17 фронтенд-тестов, линт 0/0, сборка, `npm audit` — **0 уязвимостей в обоих пакетах**.
+CI на GitHub (Node 22) — зелёный на `27506b0`.
+
+**Грабли, которые встретились:**
+- `npm install` падает с ERESOLVE, если ставить pinia 2.3 при vue 3.3: pinia 2.3
+  требует vue ≥3.5.11. Порядок: сначала vue, потом pinia.
+- eslint-plugin-vue 10 нельзя поставить поверх 9-й: конфликт peer'а
+  `vue-eslint-parser` 9/10. Решение: `npm uninstall eslint-plugin-vue`, затем установка 10-й.
+- plugin-vue 10 больше не подмешивает browser-глобали: `confirm`, `FileReader`
+  стали `no-undef`. Заменили ручной список на пакет `globals`.
+
+**Осталось проверить:** Dependabot пересчитывает алерты не мгновенно — после пуша
+счётчик может отставать. Локальный `npm audit` в обоих пакетах уже 0.
